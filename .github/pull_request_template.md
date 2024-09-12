@@ -4,5 +4,5 @@
 ## Work Description 🖋️
 - Please explain the description of this work.
 
-## PR Noticment 🔖
+## PR Notices 🔖
 - Explain noticement that reviewrs must have to check.
