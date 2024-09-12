@@ -2,7 +2,7 @@ def normalize_data(n_cases, n_people, scale):
     # TODO) Calculate the number of cases per its population
     norm_cases = []
     for idx, n in enumerate(n_cases):
-        norm_cases.append(0)
+        norm_cases.append(n_cases[idx]/n_people[idx] * scale)
     return norm_cases
 
 regions  = ['Seoul', 'Gyeongi', 'Busan', 'Gyeongnam', 'Incheon', 'Gyeongbuk', 'Daegu', 'Chungnam', 'Jeonnam', 'Jeonbuk', 'Chungbuk', 'Gangwon', 'Daejeon', 'Gwangju', 'Ulsan', 'Jeju', 'Sejong']
