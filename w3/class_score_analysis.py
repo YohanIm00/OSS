@@ -54,15 +54,15 @@ if __name__ == '__main__':
             report.write(f'| {m_score} | {f_score} | {a_score:.3f} |\n')
         report.write('\n\n\n')
 
-        # report.write('### Examination Analysis\n')
-        # data_columns = {
-        #     'Midterm': [m_score for m_score, _ in data],
-        #     'Final'  : [f_score for _, f_score in data],
-        #     'Average': average }
-        # for name, column in data_columns.items():
-        #     mean, var, median, min_, max_ = analyze_data(column)
-        #     report.write(f'* {name}\n')
-        #     report.write(f'  * Mean: **{mean:.3f}**\n')
-        #     report.write(f'  * Variance: {var:.3f}\n')
-        #     report.write(f'  * Median: **{median:.3f}**\n')
-        #     report.write(f'  * Min/Max: ({min_:.3f}, {max_:.3f})\n')
+        report.write('### Examination Analysis\n')
+        data_columns = {
+            'Midterm': [m_score for m_score, _ in data],
+            'Final'  : [f_score for _, f_score in data],
+            'Average': average }
+        for name, column in data_columns.items():
+            mean, var, median, min_, max_ = analyze_data(column)
+            report.write(f'* {name}\n')
+            report.write(f'  * Mean: **{mean:.3f}**\n')
+            report.write(f'  * Variance: {var:.3f}\n')
+            report.write(f'  * Median: **{median:.3f}**\n')
+            report.write(f'  * Min/Max: ({min_:.3f}, {max_:.3f})\n')
