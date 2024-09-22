@@ -40,11 +40,9 @@ def analyze_data(data_1d):
 
 if __name__ == '__main__':
     data = read_data('data/class_score_en.csv')
-    # print(data) # a simple code for testing the whether 2d array is initialized well or not
     if data and len(data[0]) == 2: # Check 'data' is valid
         average = calc_weighted_average(data, [40/125, 60/100])
-    # print(average) # a simple code for testing calc_weighted_average() function working well.
-
+    
     # Write the analysis report as a markdown file
     with open('class_score_analysis.md', 'w') as report:
         report.write('### Individual Score\n\n')
