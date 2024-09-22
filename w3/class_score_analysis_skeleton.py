@@ -12,11 +12,7 @@ def read_data(filename):
 
 def calc_weighted_average(data_2d, weight):
     # TODO) Calculate the weighted averages of each row of `data_2d`
-    average = []
-    
-    for i in range(len(data_2d)):
-        average.append(data_2d[i][0] * weight[0] + data_2d[i][1] * weight[1])
-    
+    average = [data_2d[i][0] * weight[0] + data_2d[i][1] * weight[1] for i in range(len(data_2d))]
     return average
 
 # def analyze_data(data_1d):
@@ -28,20 +24,20 @@ def calc_weighted_average(data_2d, weight):
 #     return mean, var, median, min(data_1d), max(data_1d)
 
 if __name__ == '__main__':
-    data = read_data('w3/data/class_score_en.csv')
+    data = read_data('data/class_score_en.csv')
     # print(data) # a simple code for testing the whether 2d array is initialized well or not
     if data and len(data[0]) == 2: # Check 'data' is valid
         average = calc_weighted_average(data, [40/125, 60/100])
-    print(average) 
+    # print(average) # a simple code for testing calc_weighted_average() function working well.
 
-    #     # Write the analysis report as a markdown file
-    #     with open('class_score_analysis.md', 'w') as report:
-    #         report.write('### Individual Score\n\n')
-    #         report.write('| Midterm | Final | Average |\n')
-    #         report.write('| ------- | ----- | ----- |\n')
-    #         for ((m_score, f_score), a_score) in zip(data, average):
-    #             report.write(f'| {m_score} | {f_score} | {a_score:.3f} |\n')
-    #         report.write('\n\n\n')
+        # Write the analysis report as a markdown file
+        with open('class_score_analysis.md', 'w') as report:
+            report.write('### Individual Score\n\n')
+            report.write('| Midterm | Final | Average |\n')
+            report.write('| ------- | ----- | ----- |\n')
+            for ((m_score, f_score), a_score) in zip(data, average):
+                report.write(f'| {m_score} | {f_score} | {a_score:.3f} |\n')
+            report.write('\n\n\n')
 
     #         report.write('### Examination Analysis\n')
     #         data_columns = {
