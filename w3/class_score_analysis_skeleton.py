@@ -1,6 +1,5 @@
 def read_data(filename):
-    # TODO) Read `filename` as a list of integer numbers
-    
+    # TODO) Read `filename` as a list of integer numbers    
     data = []
     
     with open(filename, 'r') as f:
@@ -8,14 +7,17 @@ def read_data(filename):
             if not line.startswith('#'):
                 temp = [int(num) for num in line.split(',')]
                 data.append(temp)
-                # data.append(line.strip().split(', '))
     
     return data
 
-# def calc_weighted_average(data_2d, weight):
-#     # TODO) Calculate the weighted averages of each row of `data_2d`
-#     average = []
-#     return average
+def calc_weighted_average(data_2d, weight):
+    # TODO) Calculate the weighted averages of each row of `data_2d`
+    average = []
+    
+    for i in range(len(data_2d)):
+        average.append(data_2d[i][0] * weight[0] + data_2d[i][1] * weight[1])
+    
+    return average
 
 # def analyze_data(data_1d):
 #     # TODO) Derive summary of the given `data_1d`
@@ -27,9 +29,10 @@ def read_data(filename):
 
 if __name__ == '__main__':
     data = read_data('w3/data/class_score_en.csv')
-    print(data)
-    # if data and len(data[0]) == 2: # Check 'data' is valid
-    #     average = calc_weighted_average(data, [40/125, 60/100])
+    # print(data) # a simple code for testing the whether 2d array is initialized well or not
+    if data and len(data[0]) == 2: # Check 'data' is valid
+        average = calc_weighted_average(data, [40/125, 60/100])
+    print(average) 
 
     #     # Write the analysis report as a markdown file
     #     with open('class_score_analysis.md', 'w') as report:
