@@ -1,11 +1,14 @@
 def read_data(filename):
     # TODO) Read `filename` as a list of integer numbers
+    
     data = []
     
     with open(filename, 'r') as f:
         for line in f.readlines():
             if not line.startswith('#'):
-                data.append(line.strip().split(', '))
+                temp = [int(num) for num in line.split(',')]
+                data.append(temp)
+                # data.append(line.strip().split(', '))
     
     return data
 
@@ -25,7 +28,6 @@ def read_data(filename):
 if __name__ == '__main__':
     data = read_data('w3/data/class_score_en.csv')
     print(data)
-    print(type(100 * 3))
     # if data and len(data[0]) == 2: # Check 'data' is valid
     #     average = calc_weighted_average(data, [40/125, 60/100])
 
