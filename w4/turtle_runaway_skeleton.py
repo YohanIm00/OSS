@@ -11,17 +11,17 @@ class RunawayGame:
         self.catch_radius2 = catch_radius**2
 
         # Initialize 'runner' and 'chaser'
-        self.runner.shape('turtle')
+        # self.runner.shape()
         self.runner.color('blue')
         self.runner.penup()
 
-        self.chaser.shape('turtle')
+        self.chaser.shape('circle')
         self.chaser.color('red')
         self.chaser.penup()
 
         # Instantiate an another turtle for drawing
         self.drawer = turtle.RawTurtle(canvas)
-        self.drawer.hideturtle()
+        # self.drawer.hideturtle()
         self.drawer.penup()
 
     def is_catched(self):
@@ -32,7 +32,7 @@ class RunawayGame:
 
     def start(self, init_dist=400, ai_timer_msec=100):
         self.runner.setpos((-init_dist / 2, 0))
-        self.runner.setheading(0)
+        self.runner.setheading(90)
         self.chaser.setpos((+init_dist / 2, 0))
         self.chaser.setheading(180)
 
@@ -55,16 +55,18 @@ class RunawayGame:
         self.canvas.ontimer(self.step, self.ai_timer_msec)
 
 class ManualMover(turtle.RawTurtle):
-    def __init__(self, canvas, step_move=10, step_turn=10):
+    def __init__(self, canvas, step_move=10):
         super().__init__(canvas)
         self.step_move = step_move
-        self.step_turn = step_turn
+        # self.step_turn = step_turn
 
         # Register event handlers
         canvas.onkeypress(lambda: self.forward(self.step_move), 'Up')
         canvas.onkeypress(lambda: self.backward(self.step_move), 'Down')
-        canvas.onkeypress(lambda: self.left(self.step_turn), 'Left')
-        canvas.onkeypress(lambda: self.right(self.step_turn), 'Right')
+        # instead of turning it, I would like to just move it as well as 
+        canvas.onkeypress(lambda: self.left(self.step_move), 'Left')
+        canvas.onkeypress(lambda: self.right(self.step_move), 'Right')
+        # if I enlarge to press left or right button, its buffer gets overflowed... 
         canvas.listen()
 
     def run_ai(self, opp_pos, opp_heading):
@@ -77,6 +79,7 @@ class RandomMover(turtle.RawTurtle):
         self.step_turn = step_turn
 
     def run_ai(self, opp_pos, opp_heading):
+        # How about revising this part, too?
         mode = random.randint(0, 2)
         if mode == 0:
             self.forward(self.step_move)
@@ -88,14 +91,18 @@ class RandomMover(turtle.RawTurtle):
 if __name__ == '__main__':
     # Use 'TurtleScreen' instead of 'Screen' to prevent an exception from the singleton 'Screen'
     root = tk.Tk()
-    canvas = tk.Canvas(root, width=700, height=700)
+    root.title("Turtle Runaway")
+    canvas = tk.Canvas(root, width=1920, height=1080)
     canvas.pack()
-    screen = turtle.TurtleScreen(canvas)
+    mainScreen = turtle.TurtleScreen(canvas)
+    gameScreen = turtle.TurtleScreen(canvas)
+    #gameScreen.bgcolor('#000000')
+    recordScreen = turtle.TurtleScreen(canvas)
 
     # TODO) Change the follows to your turtle if necessary
-    runner = RandomMover(screen)
-    chaser = ManualMover(screen)
+    runner = ManualMover(gameScreen)
+    chaser = RandomMover(gameScreen)
 
-    game = RunawayGame(screen, runner, chaser)
+    game = RunawayGame(gameScreen, runner, chaser)
     game.start()
-    screen.mainloop()
+    gameScreen.mainloop()
