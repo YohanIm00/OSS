@@ -55,27 +55,67 @@ class RunawayGame:
         self.canvas.ontimer(self.step, self.ai_timer_msec)
 
 class ManualMover(turtle.RawTurtle):
-    def __init__(self, canvas, step_move=10):
-        super().__init__(canvas)
+    def __init__(self, screen, step_move=10):
+        super().__init__(screen)
+        self.screen = screen
         self.step_move = step_move
-        # self.step_turn = step_turn
+        self.keys = set()
 
-        # Register event handlers
-        # canvas.onkeypress(lambda: self.forward(self.step_move), 'Up')
-        # canvas.onkeypress(lambda: self.backward(self.step_move), 'Down')
-        # # instead of turning it, I would like to just move it as well as 
-        # canvas.onkeypress(lambda: self.left(self.step_move), 'Left')
-        # canvas.onkeypress(lambda: self.right(self.step_move), 'Right')
+        # Bind key press and release events to track keys
+        screen.onkeypress(lambda: self.key_press('Up'), "Up")
+        screen.onkeyrelease(lambda: self.key_release('Up'), "Up")
+        screen.onkeypress(lambda: self.key_press('Down'), "Down")
+        screen.onkeyrelease(lambda: self.key_release('Down'), "Down")
+        screen.onkeypress(lambda: self.key_press('Left'), "Left")
+        screen.onkeyrelease(lambda: self.key_release('Left'), "Left")
+        screen.onkeypress(lambda: self.key_press('Right'), "Right")
+        screen.onkeyrelease(lambda: self.key_release('Right'), "Right")
         
-        canvas.onkeypress(lambda: self.sety(self.ycor()+step_move), "Up")
-        canvas.onkeypress(lambda: self.sety(self.ycor()-step_move), "Down")
-        canvas.onkeypress(lambda: self.setx(self.xcor()+step_move), "Right")
-        canvas.onkeypress(lambda: self.setx(self.xcor()-step_move), "Left")
+        screen.listen()
+        self.move()
         
-        canvas.listen()
+    def key_press(self, key):
+        self.keys.add(key)
+
+    def key_release(self, key):
+        self.keys.discard(key)
+
+    def move(self):
+        # Get current position
+        x, y = self.xcor(), self.ycor()
+        diagonal_step = self.step_move * 0.7071  # Moving diagonally; multiplying by sin(45°) for smooth diagonal movement
+
+        # Movement combinations for 8 directions
+        if 'Up' in self.keys and 'Left' in self.keys:
+            x -= diagonal_step
+            y += diagonal_step
+        elif 'Up' in self.keys and 'Right' in self.keys:
+            x += diagonal_step
+            y += diagonal_step
+        elif 'Down' in self.keys and 'Left' in self.keys:
+            x -= diagonal_step
+            y -= diagonal_step
+        elif 'Down' in self.keys and 'Right' in self.keys:
+            x += diagonal_step
+            y -= diagonal_step
+        elif 'Up' in self.keys:
+            y += self.step_move
+        elif 'Down' in self.keys:
+            y -= self.step_move
+        elif 'Left' in self.keys:
+            x -= self.step_move
+        elif 'Right' in self.keys:
+            x += self.step_move
+
+        # Update turtle's position
+        self.setposition(x, y)
+
+        # Keep repeating the move function
+        self.screen.ontimer(self.move, 20)
 
     def run_ai(self, opp_pos, opp_heading):
         pass
+
 
 class RandomMover(turtle.RawTurtle):
     def __init__(self, canvas, step_move=10, step_turn=10):
