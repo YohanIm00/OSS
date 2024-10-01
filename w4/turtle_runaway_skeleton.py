@@ -12,11 +12,11 @@ class RunawayGame:
 
         # Initialize 'runner' and 'chaser'
         # self.runner.shape()
-        self.runner.color('blue')
+        self.runner.color('gray')
         self.runner.penup()
 
         self.chaser.shape('circle')
-        self.chaser.color('red')
+        self.chaser.color('orange')
         self.chaser.penup()
 
         # Instantiate an another turtle for drawing
@@ -61,12 +61,17 @@ class ManualMover(turtle.RawTurtle):
         # self.step_turn = step_turn
 
         # Register event handlers
-        canvas.onkeypress(lambda: self.forward(self.step_move), 'Up')
-        canvas.onkeypress(lambda: self.backward(self.step_move), 'Down')
-        # instead of turning it, I would like to just move it as well as 
-        canvas.onkeypress(lambda: self.left(self.step_move), 'Left')
-        canvas.onkeypress(lambda: self.right(self.step_move), 'Right')
-        # if I enlarge to press left or right button, its buffer gets overflowed... 
+        # canvas.onkeypress(lambda: self.forward(self.step_move), 'Up')
+        # canvas.onkeypress(lambda: self.backward(self.step_move), 'Down')
+        # # instead of turning it, I would like to just move it as well as 
+        # canvas.onkeypress(lambda: self.left(self.step_move), 'Left')
+        # canvas.onkeypress(lambda: self.right(self.step_move), 'Right')
+        
+        canvas.onkeypress(lambda: self.sety(self.ycor()+step_move), "Up")
+        canvas.onkeypress(lambda: self.sety(self.ycor()-step_move), "Down")
+        canvas.onkeypress(lambda: self.setx(self.xcor()+step_move), "Right")
+        canvas.onkeypress(lambda: self.setx(self.xcor()-step_move), "Left")
+        
         canvas.listen()
 
     def run_ai(self, opp_pos, opp_heading):
@@ -96,7 +101,7 @@ if __name__ == '__main__':
     canvas.pack()
     mainScreen = turtle.TurtleScreen(canvas)
     gameScreen = turtle.TurtleScreen(canvas)
-    #gameScreen.bgcolor('#000000')
+    gameScreen.bgcolor('dark salmon')
     recordScreen = turtle.TurtleScreen(canvas)
 
     # TODO) Change the follows to your turtle if necessary
