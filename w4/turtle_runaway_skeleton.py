@@ -12,11 +12,12 @@ class RunawayGame:
 
         # Initialize 'runner' and 'chaser'
         # self.runner.shape()
-        self.runner.color('gray')
+        self.runner.color('#F3F3F3')
         self.runner.penup()
 
+        self.chaser.shapesize(0.2, 0.2, 0.2)
         self.chaser.shape('circle')
-        self.chaser.color('orange')
+        self.chaser.color('yellow')
         self.chaser.penup()
 
         # Instantiate an another turtle for drawing
@@ -30,7 +31,7 @@ class RunawayGame:
         dx, dy = p[0] - q[0], p[1] - q[1]
         return dx**2 + dy**2 < self.catch_radius2
 
-    def start(self, init_dist=400, ai_timer_msec=100):
+    def start(self, init_dist=200, ai_timer_msec=100):
         self.runner.setpos((-init_dist / 2, 0))
         self.runner.setheading(90)
         self.chaser.setpos((+init_dist / 2, 0))
@@ -55,7 +56,7 @@ class RunawayGame:
         self.canvas.ontimer(self.step, self.ai_timer_msec)
 
 class ManualMover(turtle.RawTurtle):
-    def __init__(self, screen, step_move=10):
+    def __init__(self, screen, step_move=5):
         super().__init__(screen)
         self.screen = screen
         self.step_move = step_move
@@ -87,17 +88,17 @@ class ManualMover(turtle.RawTurtle):
 
         # Movement combinations for 8 directions
         if 'Up' in self.keys and 'Left' in self.keys:
-            x -= diagonal_step
-            y += diagonal_step
+            x -= self.step_move
+            y += self.step_move
         elif 'Up' in self.keys and 'Right' in self.keys:
-            x += diagonal_step
-            y += diagonal_step
+            x += self.step_move
+            y += self.step_move
         elif 'Down' in self.keys and 'Left' in self.keys:
-            x -= diagonal_step
-            y -= diagonal_step
+            x -= self.step_move
+            y -= self.step_move
         elif 'Down' in self.keys and 'Right' in self.keys:
-            x += diagonal_step
-            y -= diagonal_step
+            x += self.step_move
+            y -= self.step_move
         elif 'Up' in self.keys:
             y += self.step_move
         elif 'Down' in self.keys:
@@ -111,7 +112,7 @@ class ManualMover(turtle.RawTurtle):
         self.setposition(x, y)
 
         # Keep repeating the move function
-        self.screen.ontimer(self.move, 20)
+        self.screen.ontimer(self.move, 15)
 
     def run_ai(self, opp_pos, opp_heading):
         pass
@@ -137,17 +138,14 @@ if __name__ == '__main__':
     # Use 'TurtleScreen' instead of 'Screen' to prevent an exception from the singleton 'Screen'
     root = tk.Tk()
     root.title("Turtle Runaway")
-    canvas = tk.Canvas(root, width=1920, height=1080)
+    canvas = tk.Canvas(root, width=400, height=300)
     canvas.pack()
     mainScreen = turtle.TurtleScreen(canvas)
-    gameScreen = turtle.TurtleScreen(canvas)
-    gameScreen.bgcolor('dark salmon')
-    recordScreen = turtle.TurtleScreen(canvas)
+    mainScreen.bgcolor('black')
 
-    # TODO) Change the follows to your turtle if necessary
-    runner = ManualMover(gameScreen)
-    chaser = RandomMover(gameScreen)
+    runner = ManualMover(mainScreen)
+    chaser = RandomMover(mainScreen)
 
-    game = RunawayGame(gameScreen, runner, chaser)
+    game = RunawayGame(mainScreen, runner, chaser)
     game.start()
-    gameScreen.mainloop()
+    mainScreen.mainloop()
