@@ -3,16 +3,53 @@
 import tkinter as tk
 import turtle, random
 
+class Bullet(turtle.RawTurtle):
+    def __init__(self, canvas):
+        super().__init__(canvas)
+        self.shapesize(0.2, 0.2, 0.2)
+        self.shape('circle')
+        self.color('yellow')
+        self.penup()
+        self.speed(0)  # Fastest speed
+        self.hideturtle()  # Start hidden
+
+    def fire(self, start_pos, angle):
+        self.setposition(start_pos)
+        self.setheading(angle)
+        self.showturtle()  # Make the bullet visible
+        self.move()
+
+    def move(self):
+        self.forward(10)  # Move the bullet forward
+        
+        # Check if bullet goes off-screen and reposition to a random location
+        # Check if bullet goes off-screen and reposition
+        if self.xcor() > 210:  # Right edge
+            self.setx(-200)  # Reappear on the left edge
+            self.sety(random.randint(-150, 150))  # Random y position within bounds
+        elif self.xcor() < -210:  # Left edge
+            self.setx(-200)  # Reappear on the right edge
+            self.sety(random.randint(-150, 150))  # Random y position within bounds
+        elif self.ycor() > 160:  # Top edge
+            self.sety(-150)  # Reappear at the bottom edge
+            self.setx(random.randint(-200, 200))  # Random x position within bounds
+        elif self.ycor() < -160:  # Bottom edge
+            self.sety(150)  # Reappear at the top edge
+            self.setx(random.randint(-200, 200))  # Random x position within bounds
+
+        # Keep moving the bullet
+        # self.screen.ontimer(self.move, 100)  # Adjust the timer as needed
+
 class RunawayGame:
     def __init__(self, canvas, runner, chaser, catch_radius=50):
         self.canvas = canvas
-        self.runner = runner
+        self.runner = runner 
         self.chaser = chaser
         self.catch_radius2 = catch_radius**2
+        self.bullets = []  # List to hold bullets
 
         # Initialize 'runner' and 'chaser'
-        # self.runner.shape()
-        self.runner.color('#F3F3F3')
+        self.runner.color('white')
         self.runner.penup()
 
         self.chaser.shapesize(0.2, 0.2, 0.2)
@@ -22,8 +59,31 @@ class RunawayGame:
 
         # Instantiate an another turtle for drawing
         self.drawer = turtle.RawTurtle(canvas)
-        # self.drawer.hideturtle()
         self.drawer.penup()
+
+        self.create_bullets()  # Create bullets in advance
+
+    def create_bullets(self):
+        for _ in range(50):  # Create 50 bullets
+            bullet = Bullet(self.canvas)
+
+            # Randomly choose a side to spawn the bullet
+            side = random.choice(["top", "bottom", "left", "right"])
+            if side == "top":
+                start_pos = (random.randint(-200, 200), 150)  # Spawn at the top edge
+                angle = 270  # Move downwards
+            elif side == "bottom":
+                start_pos = (random.randint(-200, 200), -150)  # Spawn at the bottom edge
+                angle = 90  # Move upwards
+            elif side == "left":
+                start_pos = (-200, random.randint(-150, 150))  # Spawn at the left edge
+                angle = 0  # Move right
+            else:  # side == "right"
+                start_pos = (200, random.randint(-150, 150))  # Spawn at the right edge
+                angle = 180  # Move left
+
+            bullet.fire(start_pos, angle)  # Fire the bullet
+            self.bullets.append(bullet)  # Add to bullets list
 
     def is_catched(self):
         p = self.runner.pos()
@@ -31,13 +91,12 @@ class RunawayGame:
         dx, dy = p[0] - q[0], p[1] - q[1]
         return dx**2 + dy**2 < self.catch_radius2
 
-    def start(self, init_dist=200, ai_timer_msec=100):
+    def start(self, init_dist=200, ai_timer_msec=10):
         self.runner.setpos((-init_dist / 2, 0))
         self.runner.setheading(90)
         self.chaser.setpos((+init_dist / 2, 0))
         self.chaser.setheading(180)
 
-        # TODO) You can do something here and follows.
         self.ai_timer_msec = ai_timer_msec
         self.canvas.ontimer(self.step, self.ai_timer_msec)
 
@@ -45,7 +104,10 @@ class RunawayGame:
         self.runner.run_ai(self.chaser.pos(), self.chaser.heading())
         self.chaser.run_ai(self.runner.pos(), self.runner.heading())
 
-        # TODO) You can do something here and follows.
+        # Update bullets
+        for bullet in self.bullets:
+            bullet.move()
+
         is_catched = self.is_catched()
         self.drawer.undo()
         self.drawer.penup()
@@ -125,7 +187,6 @@ class RandomMover(turtle.RawTurtle):
         self.step_turn = step_turn
 
     def run_ai(self, opp_pos, opp_heading):
-        # How about revising this part, too?
         mode = random.randint(0, 2)
         if mode == 0:
             self.forward(self.step_move)
