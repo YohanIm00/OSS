@@ -1,7 +1,9 @@
 # This example is not working in Spyder directly (F5 or Run)
 # Please type '!python turtle_runaway.py' on IPython console in your Spyder.
 import tkinter as tk
-import turtle, random
+import turtle
+import random
+import math
 
 class Bullet(turtle.RawTurtle):
     def __init__(self, canvas):
@@ -13,32 +15,45 @@ class Bullet(turtle.RawTurtle):
         self.speed(0)  # Fastest speed
         self.hideturtle()  # Start hidden
 
-    def fire(self, start_pos, angle):
+    def fire(self, start_pos, angle, runner_pos):
         self.setposition(start_pos)
         self.setheading(angle)
         self.showturtle()  # Make the bullet visible
-        self.move()
+        self.move(runner_pos)  # Pass runner_pos to move
 
-    def move(self):
+    def move(self, runner_pos):
         self.forward(10)  # Move the bullet forward
-        
-        # Check if bullet goes off-screen and reposition to a random location
-        # Check if bullet goes off-screen and reposition
-        if self.xcor() > 210:  # Right edge
-            self.setx(-200)  # Reappear on the left edge
-            self.sety(random.randint(-150, 150))  # Random y position within bounds
-        elif self.xcor() < -210:  # Left edge
-            self.setx(-200)  # Reappear on the right edge
-            self.sety(random.randint(-150, 150))  # Random y position within bounds
-        elif self.ycor() > 160:  # Top edge
-            self.sety(-150)  # Reappear at the bottom edge
-            self.setx(random.randint(-200, 200))  # Random x position within bounds
-        elif self.ycor() < -160:  # Bottom edge
-            self.sety(150)  # Reappear at the top edge
-            self.setx(random.randint(-200, 200))  # Random x position within bounds
 
-        # Keep moving the bullet
-        # self.screen.ontimer(self.move, 100)  # Adjust the timer as needed
+        # Check if bullet goes off-screen and reposition to a random location
+        if abs(self.xcor()) > 210 or abs(self.ycor()) > 160:
+            self.hideturtle()  # Hide bullet before repositioning
+            self.respawn(runner_pos)  # Pass runner_pos to respawn method
+
+    def calculate_angle_to_runner(self, runner_pos):
+        bullet_pos = self.position()
+        dx = runner_pos[0] - bullet_pos[0]
+        dy = runner_pos[1] - bullet_pos[1]
+        return math.degrees(math.atan2(dy, dx))
+
+    def respawn(self, runner_pos):
+        # Randomly choose a side to spawn the bullet
+        side = random.choice(["top", "bottom", "left", "right"])
+        if side == "top":
+            start_pos = (random.randint(-200, 200), 150)  # Spawn at the top edge
+            angle = self.calculate_angle_to_runner(runner_pos)
+        elif side == "bottom":
+            start_pos = (random.randint(-200, 200), -150)  # Spawn at the bottom edge
+            angle = self.calculate_angle_to_runner(runner_pos)
+        elif side == "left":
+            start_pos = (-200, random.randint(-150, 150))  # Spawn at the left edge
+            angle = self.calculate_angle_to_runner(runner_pos)
+        else:  # side == "right"
+            start_pos = (200, random.randint(-150, 150))  # Spawn at the right edge
+            angle = self.calculate_angle_to_runner(runner_pos)
+
+        # Fire the bullet with the updated runner position
+        self.fire(start_pos, angle, runner_pos)
+
 
 class RunawayGame:
     def __init__(self, canvas, runner, chaser, catch_radius=50):
@@ -49,6 +64,7 @@ class RunawayGame:
         self.bullets = []  # List to hold bullets
 
         # Initialize 'runner' and 'chaser'
+        self.runner.setheading(90)
         self.runner.color('white')
         self.runner.penup()
 
@@ -57,13 +73,15 @@ class RunawayGame:
         self.chaser.color('yellow')
         self.chaser.penup()
 
-        # Instantiate an another turtle for drawing
+        # Instantiate another turtle for drawing
         self.drawer = turtle.RawTurtle(canvas)
         self.drawer.penup()
 
         self.create_bullets()  # Create bullets in advance
 
     def create_bullets(self):
+        runner_pos = self.runner.position()  # Get the runner's current position
+
         for _ in range(50):  # Create 50 bullets
             bullet = Bullet(self.canvas)
 
@@ -71,18 +89,19 @@ class RunawayGame:
             side = random.choice(["top", "bottom", "left", "right"])
             if side == "top":
                 start_pos = (random.randint(-200, 200), 150)  # Spawn at the top edge
-                angle = 270  # Move downwards
             elif side == "bottom":
                 start_pos = (random.randint(-200, 200), -150)  # Spawn at the bottom edge
-                angle = 90  # Move upwards
             elif side == "left":
                 start_pos = (-200, random.randint(-150, 150))  # Spawn at the left edge
-                angle = 0  # Move right
             else:  # side == "right"
                 start_pos = (200, random.randint(-150, 150))  # Spawn at the right edge
-                angle = 180  # Move left
 
-            bullet.fire(start_pos, angle)  # Fire the bullet
+            # Calculate angle towards runner's position
+            x_bullet, y_bullet = start_pos
+            x_runner, y_runner = runner_pos
+            angle = math.degrees(math.atan2(y_runner - y_bullet, x_runner - x_bullet))
+
+            bullet.fire(start_pos, angle, runner_pos)  # Fire the bullet towards the runner
             self.bullets.append(bullet)  # Add to bullets list
 
     def is_catched(self):
@@ -92,10 +111,8 @@ class RunawayGame:
         return dx**2 + dy**2 < self.catch_radius2
 
     def start(self, init_dist=200, ai_timer_msec=10):
-        self.runner.setpos((-init_dist / 2, 0))
-        self.runner.setheading(90)
+        self.runner.setpos(0, 0)
         self.chaser.setpos((+init_dist / 2, 0))
-        self.chaser.setheading(180)
 
         self.ai_timer_msec = ai_timer_msec
         self.canvas.ontimer(self.step, self.ai_timer_msec)
@@ -105,8 +122,9 @@ class RunawayGame:
         self.chaser.run_ai(self.runner.pos(), self.runner.heading())
 
         # Update bullets
+        runner_pos = self.runner.position()  # Get the runner's current position
         for bullet in self.bullets:
-            bullet.move()
+            bullet.move(runner_pos)  # Pass the runner's position to bullet move
 
         is_catched = self.is_catched()
         self.drawer.undo()
@@ -114,7 +132,7 @@ class RunawayGame:
         self.drawer.setpos(-300, 300)
         self.drawer.write(f'Is catched? {is_catched}')
 
-        # Note) The following line should be the last of this function to keep the game playing
+        # Note: The following line should be the last of this function to keep the game playing
         self.canvas.ontimer(self.step, self.ai_timer_msec)
 
 class ManualMover(turtle.RawTurtle):
