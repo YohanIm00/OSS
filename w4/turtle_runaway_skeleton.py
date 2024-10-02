@@ -56,22 +56,16 @@ class Bullet(turtle.RawTurtle):
 
 
 class RunawayGame:
-    def __init__(self, canvas, runner, chaser, catch_radius=50):
+    def __init__(self, canvas, runner, catch_radius=5):
         self.canvas = canvas
-        self.runner = runner 
-        self.chaser = chaser
+        self.runner = runner
         self.catch_radius2 = catch_radius**2
         self.bullets = []  # List to hold bullets
 
-        # Initialize 'runner' and 'chaser'
+        # Initialize 'runner'
         self.runner.setheading(90)
         self.runner.color('white')
         self.runner.penup()
-
-        self.chaser.shapesize(0.2, 0.2, 0.2)
-        self.chaser.shape('circle')
-        self.chaser.color('yellow')
-        self.chaser.penup()
 
         # Instantiate another turtle for drawing
         self.drawer = turtle.RawTurtle(canvas)
@@ -105,31 +99,34 @@ class RunawayGame:
             self.bullets.append(bullet)  # Add to bullets list
 
     def is_catched(self):
-        p = self.runner.pos()
-        q = self.chaser.pos()
-        dx, dy = p[0] - q[0], p[1] - q[1]
-        return dx**2 + dy**2 < self.catch_radius2
+        runner_pos = self.runner.position()
+        for bullet in self.bullets:
+            bullet_pos = bullet.position()
+            dx, dy = runner_pos[0] - bullet_pos[0], runner_pos[1] - bullet_pos[1]
+            distance_squared = dx**2 + dy**2
+            if distance_squared < self.catch_radius2:
+                print("crash")
+                return True  # The runner is caught by this bullet
+        return False
 
     def start(self, init_dist=200, ai_timer_msec=10):
         self.runner.setpos(0, 0)
-        self.chaser.setpos((+init_dist / 2, 0))
 
         self.ai_timer_msec = ai_timer_msec
         self.canvas.ontimer(self.step, self.ai_timer_msec)
 
     def step(self):
-        self.runner.run_ai(self.chaser.pos(), self.chaser.heading())
-        self.chaser.run_ai(self.runner.pos(), self.runner.heading())
-
+        self.runner.run_ai(None, None)
         # Update bullets
-        runner_pos = self.runner.position()  # Get the runner's current position
         for bullet in self.bullets:
-            bullet.move(runner_pos)  # Pass the runner's position to bullet move
+            bullet.move(self.runner.position())  # Pass the runner's position to bullet move
 
+        # Check if the runner is caught by any bullet
         is_catched = self.is_catched()
+        
         self.drawer.undo()
         self.drawer.penup()
-        self.drawer.setpos(-300, 300)
+        self.drawer.setpos(-180, 130)
         self.drawer.write(f'Is catched? {is_catched}')
 
         # Note: The following line should be the last of this function to keep the game playing
@@ -197,21 +194,21 @@ class ManualMover(turtle.RawTurtle):
     def run_ai(self, opp_pos, opp_heading):
         pass
 
+# RandomMover isn't used
+# class RandomMover(turtle.RawTurtle):
+#     def __init__(self, canvas, step_move=10, step_turn=10):
+#         super().__init__(canvas)
+#         self.step_move = step_move
+#         self.step_turn = step_turn
 
-class RandomMover(turtle.RawTurtle):
-    def __init__(self, canvas, step_move=10, step_turn=10):
-        super().__init__(canvas)
-        self.step_move = step_move
-        self.step_turn = step_turn
-
-    def run_ai(self, opp_pos, opp_heading):
-        mode = random.randint(0, 2)
-        if mode == 0:
-            self.forward(self.step_move)
-        elif mode == 1:
-            self.left(self.step_turn)
-        elif mode == 2:
-            self.right(self.step_turn)
+#     def run_ai(self, opp_pos, opp_heading):
+#         mode = random.randint(0, 2)
+#         if mode == 0:
+#             self.forward(self.step_move)
+#         elif mode == 1:
+#             self.left(self.step_turn)
+#         elif mode == 2:
+#             self.right(self.step_turn)
 
 if __name__ == '__main__':
     # Use 'TurtleScreen' instead of 'Screen' to prevent an exception from the singleton 'Screen'
@@ -219,12 +216,12 @@ if __name__ == '__main__':
     root.title("Turtle Runaway")
     canvas = tk.Canvas(root, width=400, height=300)
     canvas.pack()
-    mainScreen = turtle.TurtleScreen(canvas)
-    mainScreen.bgcolor('black')
+    gameScreen = turtle.TurtleScreen(canvas)
+    gameScreen.bgcolor('black')
 
-    runner = ManualMover(mainScreen)
-    chaser = RandomMover(mainScreen)
+    runner = ManualMover(gameScreen)
+    # chaser = RandomMover(mainScreen)
 
-    game = RunawayGame(mainScreen, runner, chaser)
+    game = RunawayGame(gameScreen, runner)
     game.start()
-    mainScreen.mainloop()
+    gameScreen.mainloop()
