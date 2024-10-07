@@ -19,21 +19,31 @@ if __name__ == '__main__':
     midterm_en, final_en = zip(*class_en)
     total_en = [40/125*midterm + 60/100*final for (midterm, final) in class_en]
 
-    # Plot midterm/final scores as points
-    # Set axes' range
-    
-    
+    # 1) Plot midterm/final scores as scatter plot
     # Make both scatter plot
-    plt.scatter(midterm_kr, final_kr, c='red', marker='.')
-    plt.scatter(midterm_en, final_en, c='blue', marker='+')
+    plt.scatter(midterm_kr, final_kr, label='Korean', color='red', marker='.')
+    plt.scatter(midterm_en, final_en, label='English', color='blue', marker='+')
     # Modify scatter plot's trivial features
-    plt.legend(labels=['Korean', 'English'], loc= "upper left")
+    plt.legend(loc= "upper left")
     plt.xlabel('Midterm scores')
     plt.xlim(0, 125)
     plt.ylabel('Final scores')
     plt.ylim(0, 100)
     plt.grid()
+    # Save figure as image file
+    plt.savefig('class_score_scatter.png')
+    # Display plot
+    plt.show()
 
-    # TODO) Plot total scores as a histogram
-
+    # 2) Plot total scores as a histogram
+    # Make both histogram plot
+    plt.hist(total_kr, bins=range(0, 101, 5), label='Korean', color='red')
+    plt.hist(total_en, bins=range(0, 101, 5), label='English', color='purple', alpha=0.4)
+    # Modify scatter plot's trivial features
+    plt.legend(loc= "upper left")
+    plt.xlabel('Total scores')
+    plt.ylabel('The number of students')
+    # Save figure as image file
+    plt.savefig('class_score_hist.png')
+    # Display plot
     plt.show()
