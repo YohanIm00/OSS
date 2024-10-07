@@ -26,8 +26,8 @@ if __name__ == '__main__':
     # Modify scatter plot's trivial features
     plt.legend(loc= "upper left")
     plt.xlabel('Midterm scores')
-    plt.xlim(0, 125)
     plt.ylabel('Final scores')
+    plt.xlim(0, 125)
     plt.ylim(0, 100)
     plt.grid()
     # Save figure as image file
@@ -43,6 +43,7 @@ if __name__ == '__main__':
     plt.legend(loc= "upper left")
     plt.xlabel('Total scores')
     plt.ylabel('The number of students')
+    plt.xlim(0, 100)
     # Save figure as image file
     plt.savefig('class_score_hist.png')
     # Display plot
