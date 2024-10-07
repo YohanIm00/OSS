@@ -16,10 +16,11 @@ if __name__ == '__main__':
     # TODO) Prepare midterm, final, and total scores
     midterm_kr, final_kr = zip(*class_kr)
     total_kr = [40/125*midterm + 60/100*final for (midterm, final) in class_kr]
-    midterm_en, final_en = [0, 0]
-    total_en = [0]
+    midterm_en, final_en = zip(*class_en)
+    total_en = [40/125*midterm + 60/100*final for (midterm, final) in class_en]
 
     # TODO) Plot midterm/final scores as points
+
 
     # TODO) Plot total scores as a histogram
 
