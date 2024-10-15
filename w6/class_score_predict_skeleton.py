@@ -9,9 +9,9 @@ if __name__ == '__main__':
     class_kr = np.loadtxt('data/class_score_kr.csv', delimiter=',')
     class_en = np.loadtxt('data/class_score_en.csv', delimiter=',')
     data = np.vstack((class_kr, class_en))
-
+    
     # Estimate a line, final = slope * midterm + y_intercept
-    line = [0, 0] # TODO) Please find the best [slope, y_intercept] from 'data'
+    line = np.polyfit(data[:, 0], data[:, 1], 1)  # Fit line to data (degree 1)
 
     # Predict scores
     final = lambda midterm: line[0] * midterm + line[1]
@@ -35,4 +35,5 @@ if __name__ == '__main__':
     plt.ylim(final_range)
     plt.grid()
     plt.legend()
+    plt.savefig('class_score_predict.png')
     plt.show()
