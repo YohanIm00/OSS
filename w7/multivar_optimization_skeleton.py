@@ -5,7 +5,7 @@ from scipy.optimize import minimize
 if __name__ == '__main__':
     # Define a cost function and its gradient
     f   = lambda x: (1 - x[0])**2 + 100*(x[1] - x[0]**2)**2
-    fd  = lambda x: np.array([0, 0]) # TODO: Fill the gradient vector as [df / dx[0], df / dx[1]]
+    fd  = lambda x: np.array([2*x[0]*(1 - 200*(x[1] - x[0]**2))-2, 200*(x[1] - x[0]**2)]) # TODO: Fill the gradient vector as [df / dx[0], df / dx[1]]
 
     # Define configuration
     x_init = [-1, 1]   # Please try other initial points
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     for i in range(max_iter):
         # Run the gradient descent
         xp = x
-        x = x - learn_rate * fd # TODO: Implement your gradient descent
+        x = x - learn_rate * fd(x) # TODO: Implement your gradient descent
         gd_xs.append(x)
 
         # Check the terminal condition
@@ -42,4 +42,5 @@ if __name__ == '__main__':
     plt.xlabel('$x_0$')
     plt.ylabel('$x_1$')
     plt.legend()
+    plt.savefig('multivar_optimization.png')
     plt.show()
