@@ -19,7 +19,7 @@ if __name__ == '__main__':
     for i in range(max_iter):
         # Run the gradient descent
         xp = x
-        x = x # TODO: Implement your gradient descent
+        x = x - learn_rate * fd # TODO: Implement your gradient descent
         gd_xs.append(x)
 
         # Check the terminal condition
