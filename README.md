@@ -8,8 +8,8 @@ Week|AssignmentName|Link
 03|Midterm and Final Exam Analysis|[🚀](https://github.com/YohanIm00/OSS/blob/main/w3/class_score_analysis.md)
 04|Turtle Runaway|[🚀](https://github.com/YohanIm00/OSS/blob/main/w4/project_proposal.md)
 05|Midterm and Final Exam Visualization|[🚀](https://github.com/YohanIm00/OSS/blob/main/w5/class_score_scatter.png)
-06|Coming Soon|⚫
-07|Coming Soon|⚫
+06|Final Exam Score Prediction|[🚀](https://github.com/YohanIm00/OSS/blob/main/w6/class_score_predict.png)
+07|Multivariate Nonlinear Optimization|[🚀](https://github.com/YohanIm00/OSS/blob/main/w7/multivar_optimization.png)
 08|Coming Soon|⚫
 09|Coming Soon|⚫
 10|Coming Soon|⚫
