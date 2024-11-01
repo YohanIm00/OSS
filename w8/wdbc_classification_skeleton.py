@@ -32,10 +32,11 @@ if __name__ == '__main__':
     predict = model.predict(wdbc.data)
     accuracy = metrics.balanced_accuracy_score(wdbc.target, predict)
     
-    # TODO #3) Visualize the confusion matrix
-    cm_dict = {'gtm': 0, 'gtb': 0, 'pm': 0, 'pb': 0}    # Make dictionary for preparing visualization
+    # Make dictionary for preparing visualization
+    cm_dict = {'gtm': 0, 'gtb': 0, 'pm': 0, 'pb': 0}
     
-    for p, gt in zip(predict, wdbc.target): # Modify each value with interating both list
+    # Modify each value with interating both list
+    for p, gt in zip(predict, wdbc.target):
         if p == 0:
                 cm_dict['pm'] += 1
         else:
@@ -48,6 +49,11 @@ if __name__ == '__main__':
     # Set values of Ground Truth and its Prediction
     y_true = [False] * cm_dict['gtm'] + [True] * cm_dict['gtb'] # True labels
     y_pred = [False] * cm_dict['pm'] + [True] * cm_dict['pb']   # Predicted labels
+    
+    # TODO #3) Visualize the confusion matrix
+    conf_matx = metrics.confusion_matrix(y_true, y_pred)
+    conf_disp = metrics.ConfusionMatrixDisplay(conf_matx, display_labels=['malignant', 'benign'])
+    conf_disp.plot()
     
     # Visualize testing results
     cmap = np.array([(1, 0, 0), (0, 1, 0)])
