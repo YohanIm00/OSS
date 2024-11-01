@@ -31,9 +31,24 @@ if __name__ == '__main__':
     # Test the model
     predict = model.predict(wdbc.data)
     accuracy = metrics.balanced_accuracy_score(wdbc.target, predict)
-
+    
     # TODO #3) Visualize the confusion matrix
-
+    cm_dict = {'gtm': 0, 'gtb': 0, 'pm': 0, 'pb': 0}    # Make dictionary for preparing visualization
+    
+    for p, gt in zip(predict, wdbc.target): # Modify each value with interating both list
+        if p == 0:
+                cm_dict['pm'] += 1
+        else:
+                cm_dict['pb'] += 1
+        if gt == 0:
+                cm_dict['gtm'] += 1
+        else:
+                cm_dict['gtb'] += 1
+    
+    # Set values of Ground Truth and its Prediction
+    y_true = [False] * cm_dict['gtm'] + [True] * cm_dict['gtb'] # True labels
+    y_pred = [False] * cm_dict['pm'] + [True] * cm_dict['pb']   # Predicted labels
+    
     # Visualize testing results
     cmap = np.array([(1, 0, 0), (0, 1, 0)])
     clabel = [Line2D([0], [0], marker='o', lw=0, label=wdbc.target_names[i], color=cmap[i]) for i in range(len(cmap))]
