@@ -25,7 +25,7 @@ if __name__ == '__main__':
     wdbc = load_wdbc_data('data/wdbc.data')
 
     # Train a model
-    model = svm.SVC()                           # TODO #2) Find a better classifier (SVC accuracy: 0.902)
+    model = svm.SVC(kernel='rbf', gamma=0.002)                 # Find a better classifier (SVC accuracy: 0.902) -> (rbf SVC accuracy: 0.987)
     model.fit(wdbc.data, wdbc.target)
 
     # Test the model
