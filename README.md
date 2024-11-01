@@ -10,7 +10,7 @@ Week|AssignmentName|Link
 05|Midterm and Final Exam Visualization|[🚀](https://github.com/YohanIm00/OSS/blob/main/w5/class_score_scatter.png)
 06|Final Exam Score Prediction|[🚀](https://github.com/YohanIm00/OSS/blob/main/w6/class_score_predict.png)
 07|Multivariate Nonlinear Optimization|[🚀](https://github.com/YohanIm00/OSS/blob/main/w7/multivar_optimization.png)
-08|Coming Soon|⚫
+08|Breast Cancer Classification|[🚀](https://github.com/YohanIm00/OSS/blob/main/w8/wdbc_classification_scatter.png)
 09|Coming Soon|⚫
 10|Coming Soon|⚫
 11|Coming Soon|⚫
