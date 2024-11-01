@@ -15,14 +15,14 @@ def load_wdbc_data(filename):
     with open(filename) as f:
         for line in f.readlines():
             items = line.split(',')
-            wdbc.target.append(0 if items[1]=='M' else 1)        # Adding the true label (0 for M / 1 for others)
-            wdbc.data.append(items[2:])         # Appending 30 attributes (as floating-point numbers)
+            wdbc.target.append(0 if items[1]=='M' else 1)        # Add the true label: 0 for M, 1 for others
+            wdbc.data.append(items[2:])         # Append 30 attributes as floating-point numbers
         wdbc.data = np.array(wdbc.data)
     return wdbc
 
 if __name__ == '__main__':
     # Load a dataset
-    wdbc = load_wdbc_data('data/wdbc.data')     # TODO #1) Implement 'load_wdbc_data()'
+    wdbc = load_wdbc_data('data/wdbc.data')
 
     # Train a model
     model = svm.SVC()                           # TODO #2) Find a better classifier (SVC accuracy: 0.902)
