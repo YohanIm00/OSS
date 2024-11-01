@@ -15,8 +15,8 @@ def load_wdbc_data(filename):
     with open(filename) as f:
         for line in f.readlines():
             items = line.split(',')
-            wdbc.target.append(0 if items[1]=='M' else 1)        # Add the true label: 0 for M, 1 for others
-            wdbc.data.append(items[2:])         # Append 30 attributes as floating-point numbers
+            wdbc.target.append(0 if items[1]=='M' else 1)       # Add the true label: 0 for M, 1 for others
+            wdbc.data.append([float(num) for num in items[2:]]) # Append 30 attributes as floating-point numbers
         wdbc.data = np.array(wdbc.data)
     return wdbc
 
