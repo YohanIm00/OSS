@@ -25,7 +25,7 @@ if __name__ == '__main__':
     wdbc = load_wdbc_data('data/wdbc.data')
 
     # Train a model
-    model = svm.SVC(kernel='rbf', gamma=0.002)                 # Find a better classifier (SVC accuracy: 0.902) -> (rbf SVC accuracy: 0.987)
+    model = svm.SVC(kernel='rbf', gamma=0.001)                 # Find a better classifier (SVC accuracy: 0.902) -> (rbf SVC accuracy: 0.987)
     model.fit(wdbc.data, wdbc.target)
 
     # Test the model
@@ -37,14 +37,19 @@ if __name__ == '__main__':
     
     # Modify each value with interating both list
     for p, gt in zip(predict, wdbc.target):
-        if p == 0:
-                cm_dict['pm'] += 1
-        else:
-                cm_dict['pb'] += 1
         if gt == 0:
                 cm_dict['gtm'] += 1
         else:
                 cm_dict['gtb'] += 1
+        if p == 0:
+                cm_dict['pm'] += 1
+        else:
+                cm_dict['pb'] += 1
+    
+    print(cm_dict['gtm'])
+    print(cm_dict['gtb'])
+    print(cm_dict['pm'])
+    print(cm_dict['pb'])
     
     # Set values of Ground Truth and its Prediction
     y_true = [False] * cm_dict['gtm'] + [True] * cm_dict['gtb'] # True labels
@@ -54,6 +59,7 @@ if __name__ == '__main__':
     conf_matx = metrics.confusion_matrix(y_true, y_pred)
     conf_disp = metrics.ConfusionMatrixDisplay(conf_matx, display_labels=['malignant', 'benign'])
     conf_disp.plot()
+    plt.savefig('wdbc_classification_matrix.png')
     
     # Visualize testing results
     cmap = np.array([(1, 0, 0), (0, 1, 0)])
@@ -65,4 +71,5 @@ if __name__ == '__main__':
         plt.xlabel(wdbc.feature_names[x])
         plt.ylabel(wdbc.feature_names[y])
         plt.legend(handles=clabel, framealpha=0.5)
+    plt.savefig('wdbc_classification_scatter.png')
     plt.show()
