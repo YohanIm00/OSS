@@ -11,7 +11,7 @@ Week|AssignmentName|Link
 06|Final Exam Score Prediction|[🚀](https://github.com/YohanIm00/OSS/blob/main/w6/class_score_predict.png)
 07|Multivariate Nonlinear Optimization|[🚀](https://github.com/YohanIm00/OSS/blob/main/w7/multivar_optimization.png)
 08|Breast Cancer Classification|[🚀](https://github.com/YohanIm00/OSS/blob/main/w8/wdbc_classification_scatter.png)
-09|Coming Soon|⚫
+09|Breast Cancer Classification with Cross-validation|[🚀](https://github.com/YohanIm00/OSS/blob/main/w9/wdbc_classification_cv.png)
 10|Coming Soon|⚫
 11|Coming Soon|⚫
 12|Coming Soon|⚫
